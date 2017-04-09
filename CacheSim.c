@@ -54,68 +54,6 @@ struct element{
 //declare cache array
 struct element cache[lines_num][cacheAssociativity_num];
 
-int main(int argc, char ** argv){
-
-  if(argv[1] == NULL){
-    printf("Please input a value 0-3 for the exponent of the cache associativity.\n" );
-    return 0;
-  }
-  else if(atoi(argv[1])>3 || atoi(argv[1])<0){
-      printf("Invalid size for cache associativity. Please enter 0-3. \n");
-      return 0;
-  }
-
-  //use the second argument to set the size of the associativity of the cache
-  //assume valid input of 0-3 for sizes of 1, 2, 4, or 8
-//  cacheAssociativity_exp = atoi(argv[1]);
-  //cacheAssociativity_num = (1 << cacheAssociativity_exp);
-
-  //determine the line size based on the associativity, block size and cache size
-//  lines_exp = ((cacheSize_exp) - (cacheAssociativity_exp + blockSize_exp));
-//  lines_num = (1 << lines_exp);
-//  lines_mask = (lines_num - 1);
-
-  //determine the tag size
-  tag_exp = (address_size - blockSize_exp - lines_exp);
-  tag_num = (1 << tag_exp);
-  tag_mask = (tag_num - 1);
-
-  //initialize cache
-//  cache[lines_num][cacheAssociativity_num];
-
-//  for(int i = 0; i<lines_num; i++){
-//   for(int j = 0; j<cacheAssociativity_num; j++){
-//      cache[i][j].tag = 0;
-//      cache[i][j].line = 0;
-//      cache[i][j].valid = 0;
-//    }
-//  }
-
-
-  //initialize hit to 0
-  hit = 0;
-
-  uint32_t *address;
-  FILE* fp = fopen(argv[2], "rb");
-  while(fread(address,4,1,fp)) {
-    //printf("%x\n",*address);
-
-    struct element entry;
-    entry.tag = ((*address) >> (blockSize_exp+lines_exp)) & tag_mask;
-    entry.line = ((*address) >> blockSize_exp) & lines_mask;
-    entry.valid = 1;
-
-    hit += place(entry);
-
-  }
-  fclose(fp);
-  printf("Hello World\n" );
-
-  float hitRatio = (float)hit/(1<<26);
-  printResults(hitRatio, argv[2]);
-
-  return 0;
-}
 
 
 void printResults(double hitRatio, char * fileName){
@@ -125,6 +63,16 @@ void printResults(double hitRatio, char * fileName){
   printf("Hit Ratio: %f\n", hitRatio);
   return;
 }
+
+//replace element in the cache with current element passed through as an argument
+//currently set up for random replacement
+void bump(struct element entry){
+  int i = rand() % cacheAssociativity_num;
+  cache[entry.line][i].tag = entry.tag;
+  cache[entry.line][i].line = entry.line;
+  cache[entry.line][i].valid = entry.valid;
+}
+
 
 
 //place an element into the cache
@@ -154,11 +102,34 @@ int place(struct element entry){
 }
 
 
-//replace element in the cache with current element passed through as an argument
-//currently set up for random replacement
-void bump(struct element entry){
-  int i = rand() % cacheAssociativity_num;
-  cache[entry.line][i].tag = entry.tag;
-  cache[entry.line][i].line = entry.line;
-  cache[entry.line][i].valid = entry.valid;
+int main(int argc, char ** argv){
+
+  //determine the tag size
+  tag_exp = (address_size - blockSize_exp - lines_exp);
+  tag_num = (1 << tag_exp);
+  tag_mask = (tag_num - 1);
+
+  //initialize hit to 0
+  hit = 0;
+
+  uint32_t *address;
+  FILE* fp = fopen(argv[1], "rb");
+  while(fread(address,4,1,fp)) {
+    //printf("%x\n",*address);
+
+    struct element entry;
+    entry.tag = ((*address) >> (blockSize_exp+lines_exp)) & tag_mask;
+    entry.line = ((*address) >> blockSize_exp) & lines_mask;
+    entry.valid = 1;
+
+    hit += place(entry);
+
+  }
+  fclose(fp);
+  printf("Hello World\n" );
+
+  float hitRatio = (float)hit/(1<<26);
+  printResults(hitRatio, argv[1]);
+
+  return 0;
 }
