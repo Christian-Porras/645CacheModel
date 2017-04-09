@@ -27,13 +27,13 @@
 #define blockSize_mask (blockSize_num - 1)
 
 //define associativity variables. These will be defined within main
-int cacheAssociativity_exp;
-int cacheAssociativity_num;
+#define cacheAssociativity_exp 0
+#define cacheAssociativity_num (1<<cacheAssociativity_exp)
 
 //declare line variables. These will be defined within main
-int lines_exp;
-int lines_num;
-int lines_mask;
+#define lines_exp ((cacheSize_exp) - (cacheAssociativity_exp + blockSize_exp))
+#define lines_num (1 << lines_exp)
+#define lines_mask (lines_num - 1)
 
 //declare tag variables. These will be defined within main
 int tag_exp;
@@ -52,7 +52,7 @@ struct element{
 };
 
 //declare cache array
-struct element ** cache;
+struct element cache[lines_num][cacheAssociativity_num];
 
 int main(int argc, char ** argv){
 
@@ -67,13 +67,13 @@ int main(int argc, char ** argv){
 
   //use the second argument to set the size of the associativity of the cache
   //assume valid input of 0-3 for sizes of 1, 2, 4, or 8
-  cacheAssociativity_exp = atoi(argv[1]);
-  cacheAssociativity_num = (1 << cacheAssociativity_exp);
+//  cacheAssociativity_exp = atoi(argv[1]);
+  //cacheAssociativity_num = (1 << cacheAssociativity_exp);
 
   //determine the line size based on the associativity, block size and cache size
-  lines_exp = ((cacheSize_exp) - (cacheAssociativity_exp + blockSize_exp));
-  lines_num = (1 << lines_exp);
-  lines_mask = (lines_num - 1);
+//  lines_exp = ((cacheSize_exp) - (cacheAssociativity_exp + blockSize_exp));
+//  lines_num = (1 << lines_exp);
+//  lines_mask = (lines_num - 1);
 
   //determine the tag size
   tag_exp = (address_size - blockSize_exp - lines_exp);
@@ -81,7 +81,16 @@ int main(int argc, char ** argv){
   tag_mask = (tag_num - 1);
 
   //initialize cache
-  cache[lines_num][cacheAssociativity_num];
+//  cache[lines_num][cacheAssociativity_num];
+
+//  for(int i = 0; i<lines_num; i++){
+//   for(int j = 0; j<cacheAssociativity_num; j++){
+//      cache[i][j].tag = 0;
+//      cache[i][j].line = 0;
+//      cache[i][j].valid = 0;
+//    }
+//  }
+
 
   //initialize hit to 0
   hit = 0;
@@ -89,20 +98,20 @@ int main(int argc, char ** argv){
   uint32_t *address;
   FILE* fp = fopen(argv[2], "rb");
   while(fread(address,4,1,fp)) {
-    printf("%x\n",*address);
+    //printf("%x\n",*address);
 
     struct element entry;
     entry.tag = ((*address) >> (blockSize_exp+lines_exp)) & tag_mask;
     entry.line = ((*address) >> blockSize_exp) & lines_mask;
     entry.valid = 1;
 
-    place(entry);
+    hit += place(entry);
 
   }
   fclose(fp);
   printf("Hello World\n" );
 
-  float hitRatio = hit/(1 << 26);
+  float hitRatio = (float)hit/(1<<26);
   printResults(hitRatio, argv[2]);
 
   return 0;
@@ -112,6 +121,7 @@ int main(int argc, char ** argv){
 void printResults(double hitRatio, char * fileName){
   printf("Name of File read: %s\n", fileName);
   printf("Associativity used: %i\n", cacheAssociativity_num);
+  printf("Number of Hits: %i\n", hit );
   printf("Hit Ratio: %f\n", hitRatio);
   return;
 }
@@ -132,7 +142,9 @@ int place(struct element entry){
   //if not found, check for open block
   for(int i = 0; i< cacheAssociativity_num; i++){
     if (! cache[entry.line][i].valid){
-      cache[entry.line][i] = entry;
+      cache[entry.line][i].tag = entry.tag;
+      cache[entry.line][i].line = entry.line;
+      cache[entry.line][i].valid = entry.valid;
       return 0;
     }
   }
@@ -146,5 +158,7 @@ int place(struct element entry){
 //currently set up for random replacement
 void bump(struct element entry){
   int i = rand() % cacheAssociativity_num;
-  cache[entry.line][i] = entry;
+  cache[entry.line][i].tag = entry.tag;
+  cache[entry.line][i].line = entry.line;
+  cache[entry.line][i].valid = entry.valid;
 }
