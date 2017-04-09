@@ -26,6 +26,20 @@
 #define blockSize_num (1 << blockSize_exp)
 #define blockSize_mask (blockSize_num - 1)
 
+//define associativity variables. These will be defined within main
+int cacheAssociativity_exp;
+int cacheAssociativity_num;
+
+//declare line variables. These will be defined within main
+int lines_exp;
+int lines_num;
+int lines_mask;
+
+//declare tag variables. These will be defined within main
+int tag_exp;
+int tag_num;
+int tag_mask;
+
 //struct for an element
 //elements are the addresses stored in the cache from the address trace
 struct element{
@@ -36,23 +50,37 @@ struct element{
 
 int main(int argc, char ** argv){
 
+  if(argv[1] == NULL){
+    printf("Please input a value 0-3 for the exponent of the cache associativity.\n" );
+    return 0;
+  }
+  else if(atoi(argv[1])>3 || atoi(argv[1])<0){
+      printf("Invalid size for cache associativity. Please enter 0-3. \n");
+      return 0;
+  }
+
   //use the second argument to set the size of the associativity of the cache
   //assume valid input of 0-3 for sizes of 1, 2, 4, or 8
-  int cacheAssociativity_exp = atoi(argv[1]);
-  int cacheAssociativity_num = (1 << cacheAssociativity_exp);
+  cacheAssociativity_exp = atoi(argv[1]);
+  cacheAssociativity_num = (1 << cacheAssociativity_exp);
 
   //determine the line size based on the associativity, block size and cache size
-  int lines_exp = ((cacheSize_exp) - (cacheAssociativity_exp + blockSize_exp));
-  int lines_num = (1 << lines_exp);
-  int lines_mask = (lines_num - 1);
+  lines_exp = ((cacheSize_exp) - (cacheAssociativity_exp + blockSize_exp));
+  lines_num = (1 << lines_exp);
+  lines_mask = (lines_num - 1);
 
   //determine the tag size
-  int tag_exp = (address_size - blockSize_exp - lines_exp);
-  int tag_num = (1 << tag_exp);
-  int tag_mask = (tag_num - 1);
-
+  tag_exp = (address_size - blockSize_exp - lines_exp);
+  tag_num = (1 << tag_exp);
+  tag_mask = (tag_num - 1);
 
 
 
   return 0;
+}
+
+void printResults(){
+//  printf("Name of File read: %s\n", fileName);
+//  printf("Hit Ratio: %d\n", hitRatio);
+  return;
 }
