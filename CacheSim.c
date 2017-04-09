@@ -91,8 +91,6 @@ void printResults(){
 //  printf("Hit Ratio: %d\n", hitRatio);
   return;
 }
-<<<<<<< HEAD
-
 
 
 //place an element into the cache
@@ -126,5 +124,3 @@ void bump(struct element entry){
   i = rand() % cacheAssociativity_num;
   cache[entry.linenum][i] = entry;
 }
-=======
->>>>>>> 0eb0c8209b43eb2b2e199756aef3f143f053796d
