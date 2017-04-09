@@ -88,7 +88,7 @@ int main(int argc, char ** argv){
     entry.line = ((*address) >> blockSize_exp) & lines_mask;
     entry.valid = 1;
 
-    printf("%x: %x, %x\n",*address, entry.tag, entry.line);
+    place(entry);
   }
   fclose(fp);
   printf("Hello World\n" );
@@ -127,11 +127,7 @@ int place(struct element entry){
   bump(entry);
   return 0;
 }
-    //place the element in the invalid space
 
-
-  return 0;
-}
 
 //replace element in the cache with current element passed through as an argument
 //currently set up for random replacement
