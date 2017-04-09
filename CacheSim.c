@@ -83,7 +83,12 @@ int main(int argc, char ** argv){
   uint32_t *address;
   FILE* fp = fopen(argv[2], "rb");
   while(fread(address,4,1,fp)) {
-    printf("%x\n",*address);
+    struct element entry;
+    entry.tag = ((*address) >> (blockSize_exp+lines_exp)) & tag_mask;
+    entry.line = ((*address) >> blockSize_exp) & lines_mask;
+    entry.valid = 1;
+
+    printf("%x: %x, %x\n",*address, entry.tag, entry.line);
   }
   fclose(fp);
   printf("Hello World\n" );
