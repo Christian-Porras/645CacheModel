@@ -114,18 +114,22 @@ int place(struct element entry){
       if(entry.tag == cache[entry.line][i].tag){
         return 1;
       }
-      //check to see if all blocks have been checked
-      else if(i == cacheAssociativity_num-1){
-        bump(entry);
-        break;
-      }
-    }
-    //place the element in the invalid space
-    else{
-      cache[entry.line][i] = entry;
-      break;
     }
   }
+  //if not found, check for open block
+  for(int i = 0; i< cacheAssociativity_num; i++){
+    if (! cache[entry.line][i].valid){
+      cache[entry.line][i] = entry;
+      return 0;
+    }
+  }
+  //if full, bump and replace
+  bump(entry);
+  return 0;
+}
+    //place the element in the invalid space
+
+
   return 0;
 }
 
