@@ -74,7 +74,13 @@ int main(int argc, char ** argv){
   tag_num = (1 << tag_exp);
   tag_mask = (tag_num - 1);
 
-
+  uint32_t *address;
+  FILE* fp = fopen(argv[2], "rb");
+  while(fread(address,4,1,fp)) {
+    printf("%x\n",*address);
+  }
+  fclose(fp);
+  printf("Hello World\n" );
 
   return 0;
 }
@@ -85,6 +91,7 @@ void printResults(){
 //  printf("Hit Ratio: %d\n", hitRatio);
   return;
 }
+<<<<<<< HEAD
 
 
 
@@ -119,3 +126,5 @@ void bump(struct element entry){
   i = rand() % cacheAssociativity_num;
   cache[entry.linenum][i] = entry;
 }
+=======
+>>>>>>> 0eb0c8209b43eb2b2e199756aef3f143f053796d
