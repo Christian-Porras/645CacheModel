@@ -1,0 +1,10 @@
+Methods:
+  boolean Place (struct element)
+   -- attempts to store element in the cache
+   -- contains logic to determine whether address is already stored
+   -- calls replacement algorithm if address is not stored
+
+  void Bump (struct element, int lineNum)
+   -- called when line is full
+   -- determines which element in the line needs to be replaced and replaces it with the input element
+   
