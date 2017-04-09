@@ -27,6 +27,12 @@
 #define blockSize_mask (blockSize_num - 1)
 
 int main(int argc, char ** argv){
+  uint32_t *address;
+  FILE* fp = fopen("/home/gminden/EECS_645/AddressTrace_FirstIndex.bin", "rb");
+  /*while(fread(address,4,1,fp)) {
+    printf("%x\n",*address);
+  }*/
+  fclose(fp);
   printf("Hello World\n" );
   return 0;
 }
