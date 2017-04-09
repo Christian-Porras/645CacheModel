@@ -48,6 +48,9 @@ struct element{
   int valid;
 };
 
+//declare cache array
+struct element ** cache;
+
 int main(int argc, char ** argv){
 
   if(argv[1] == NULL){
@@ -73,6 +76,9 @@ int main(int argc, char ** argv){
   tag_exp = (address_size - blockSize_exp - lines_exp);
   tag_num = (1 << tag_exp);
   tag_mask = (tag_num - 1);
+
+  //initialize cache
+  cache[lines_num][cacheAssociativity_num];
 
   uint32_t *address;
   FILE* fp = fopen(argv[2], "rb");
