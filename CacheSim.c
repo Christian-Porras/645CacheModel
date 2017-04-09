@@ -58,12 +58,12 @@ int main(int argc, char ** argv){
 }
 
 boolean place(struct element){
-  for(int i = 0; i < associativity; i++){
+  for(int i = 0; i < cacheAssociativity_num; i++){
     if(cache[element.linenum][i].valid){
       if(element.tag == cache[element.linenum][i].tag){
         return 1;
       }
-      else if(i == associativity-1){
+      else if(i == cacheAssociativity_num-1){
         bump(element);
         break;
       }
@@ -72,9 +72,11 @@ boolean place(struct element){
       cache[element.linenum][i] = element;
       break;
     }
-    else if (i == associativity-1){
-      bump(element);
-    }
   }
-  return 0; 
+  return 0;
+}
+
+void bump(struct element){
+  i = rand() % cacheAssociativity_num;
+  cache[element.linenum][i] = element;
 }
