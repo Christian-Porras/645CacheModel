@@ -40,6 +40,9 @@ int tag_exp;
 int tag_num;
 int tag_mask;
 
+//hit variable
+int hit;
+
 //struct for an element
 //elements are the addresses stored in the cache from the address trace
 struct element{
@@ -80,21 +83,28 @@ int main(int argc, char ** argv){
   //initialize cache
   cache[lines_num][cacheAssociativity_num];
 
+  //initialize hit to 0
+  hit = 0;
+
   uint32_t *address;
   FILE* fp = fopen(argv[2], "rb");
   while(fread(address,4,1,fp)) {
-    printf("%x\n",*address);
+    //printf("%x\n",*address);
   }
   fclose(fp);
   printf("Hello World\n" );
+
+  float hitRatio = hit/(1 << 26);
+  printResults(hitRatio, argv[2]);
 
   return 0;
 }
 
 
-void printResults(){
-//  printf("Name of File read: %s\n", fileName);
-//  printf("Hit Ratio: %d\n", hitRatio);
+void printResults(double hitRatio, char * fileName){
+  printf("Name of File read: %s\n", fileName);
+  printf("Associativity used: %i\n", cacheAssociativity_num);
+  printf("Hit Ratio: %f\n", hitRatio);
   return;
 }
 
