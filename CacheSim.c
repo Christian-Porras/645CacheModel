@@ -75,7 +75,7 @@ int main(int argc, char ** argv){
   tag_mask = (tag_num - 1);
 
   uint32_t *address;
-  FILE* fp = fopen("/home/gminden/EECS_645/AddressTrace_FirstIndex.bin", "rb");
+  FILE* fp = fopen(argv[2], "rb");
   while(fread(address,4,1,fp)) {
     printf("%x\n",*address);
   }
