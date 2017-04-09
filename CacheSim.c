@@ -79,6 +79,7 @@ int main(int argc, char ** argv){
   return 0;
 }
 
+
 void printResults(){
 //  printf("Name of File read: %s\n", fileName);
 //  printf("Hit Ratio: %d\n", hitRatio);
@@ -86,17 +87,24 @@ void printResults(){
 }
 
 
+
+//place an element into the cache
+
 boolean place(struct element){
   for(int i = 0; i < cacheAssociativity_num; i++){
+    //Check for element validity
     if(cache[element.linenum][i].valid){
+      //compare tag values
       if(element.tag == cache[element.linenum][i].tag){
         return 1;
       }
+      //check to see if all blocks have been checked
       else if(i == cacheAssociativity_num-1){
         bump(element);
         break;
       }
     }
+    //place the element in the invalid space
     else{
       cache[element.linenum][i] = element;
       break;
@@ -105,6 +113,8 @@ boolean place(struct element){
   return 0;
 }
 
+//replace element in the cache with current element passed through as an argument
+//currently set up for random replacement
 void bump(struct element){
   i = rand() % cacheAssociativity_num;
   cache[element.linenum][i] = element;
