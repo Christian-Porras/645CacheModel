@@ -95,12 +95,12 @@ void printResults(){
 
 //place an element into the cache
 
-boolean place(struct element entry){
+int place(struct element entry){
   for(int i = 0; i < cacheAssociativity_num; i++){
     //Check for element validity
-    if(cache[entry.linenum][i].valid){
+    if(cache[entry.line][i].valid){
       //compare tag values
-      if(entry.tag == cache[entry.linenum][i].tag){
+      if(entry.tag == cache[entry.line][i].tag){
         return 1;
       }
       //check to see if all blocks have been checked
@@ -111,7 +111,7 @@ boolean place(struct element entry){
     }
     //place the element in the invalid space
     else{
-      cache[entry.linenum][i] = entry;
+      cache[entry.line][i] = entry;
       break;
     }
   }
@@ -121,6 +121,6 @@ boolean place(struct element entry){
 //replace element in the cache with current element passed through as an argument
 //currently set up for random replacement
 void bump(struct element entry){
-  i = rand() % cacheAssociativity_num;
-  cache[entry.linenum][i] = entry;
+  int i = rand() % cacheAssociativity_num;
+  cache[entry.line][i] = entry;
 }
