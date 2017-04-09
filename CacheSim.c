@@ -26,7 +26,33 @@
 #define blockSize_num (1 << blockSize_exp)
 #define blockSize_mask (blockSize_num - 1)
 
+//struct for an element
+//elements are the addresses stored in the cache from the address trace
+struct element{
+  int tag;
+  int line;
+  int valid;
+};
+
 int main(int argc, char ** argv){
-  printf("Hello World\n" );
+
+  //use the second argument to set the size of the associativity of the cache
+  //assume valid input of 0-3 for sizes of 1, 2, 4, or 8
+  int cacheAssociativity_exp = atoi(argv[1]);
+  int cacheAssociativity_num = (1 << cacheAssociativity_exp);
+
+  //determine the line size based on the associativity, block size and cache size
+  int lines_exp = ((cacheSize_exp) - (cacheAssociativity_exp + blockSize_exp));
+  int lines_num = (1 << lines_exp);
+  int lines_mask = (lines_num - 1);
+
+  //determine the tag size
+  int tag_exp = (address_size - blockSize_exp - lines_exp);
+  int tag_num = (1 << tag_exp);
+  int tag_mask = (tag_num - 1);
+
+
+
+
   return 0;
 }
