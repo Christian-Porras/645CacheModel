@@ -5,9 +5,28 @@
 * Date: April 13th, 2017
 * Description: Simulates a cache by reading in addresses from a file and placing them
 * in an array
-*/--------------------------------------------------------------
+*-------------------------------------------------------------- */
 
-int main(char[][] args){
+//Libraries
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <stdlib.h>
+#include <stdint.h>
 
+//define the cache size
+#define cacheSize_exp 15
+#define cacheSize_num (1 << cacheSize_exp)
+
+//define address size
+#define address_size 32
+
+//define block size
+#define blockSize_exp 6
+#define blockSize_num (1 << blockSize_exp)
+#define blockSize_mask (blockSize_num - 1)
+
+int main(int argc, char ** argv){
+  printf("Hello World\n" );
   return 0;
 }
